@@ -1,0 +1,42 @@
+@startuml
+participant "Publisher" as Pub
+participant "Subscriber" as Sub
+participant "CsvDataReader" as Reader
+participant "File" as File
+
+Main -> Pub: create()
+Main -> Sub: create(publisher)
+Main -> Reader: create(publisher)
+== Subscription phase ==
+Sub -> Pub: addUserUpdateCallback(cb)
+Sub -> Pub: addNewOrderCallback(cb)
+
+== Start processing ==
+Main -> Reader: startReadingData()
+
+activate Reader
+Reader -> Reader: spawn thread
+
+loop Poll every 2 seconds
+    Reader -> File: read new lines
+    File --> Reader: "Alice;"
+    Reader -> Reader: parse User
+    Reader -> Pub: addedNewUser(User{1, "Alice"})
+    Pub -> Sub: onUserAdded(User{1, "Alice"})
+    Sub -> Sub: store user in m_names
+    
+    Reader -> File: read new lines
+    File --> Reader: "1,Laptop purchase;"
+    Reader -> Reader: parse Order
+    Reader -> Pub: addedNewOrder(Order{1, 1, "Laptop"})
+    Pub -> Sub: onOrderAdded(Order{1, 1, "Laptop"})
+    Sub -> Sub: lookup user, print order
+end
+
+User -> Main: Press Ctrl+C
+Main -> Reader: stop()
+Reader -> Reader: signal thread stop
+Reader -> Reader: wait for thread exit
+deactivate Reader
+Main -> Main: exit
+@enduml

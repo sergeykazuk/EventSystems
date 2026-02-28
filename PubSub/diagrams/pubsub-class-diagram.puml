@@ -1,0 +1,54 @@
+@startuml
+interface IPublisher {
+    +addUserUpdateCallback(UserUpdatedCB_t)
+    +addNewOrderCallback(NewOrderCB_t)
+}
+
+interface IDataReader {
+    +startReadingData()
+}
+
+class Publisher {
+    -m_userUpdateCallbacks: list<UserUpdatedCB_t>
+    -m_newOrderCallbacks: list<NewOrderCB_t>
+    +addUserUpdateCallback(UserUpdatedCB_t)
+    +addNewOrderCallback(NewOrderCB_t)
+    +addedNewUser(const User&) const
+    +addedNewOrder(const Order&) const
+}
+
+class CsvDataReader {
+    -m_pimpl: unique_ptr<PimplData>
+    +CsvDataReader(const Publisher&)
+    +~CsvDataReader()
+    +startReadingData()
+    +stop()
+    +isRunning() const
+    -runner() const
+}
+
+class Subscriber {
+    -m_names: unordered_map<size_t, string>
+    +Subscriber(IPublisher&)
+    -onUserAdded(const User&)
+    -onOrderAdded(const Order&)
+}
+
+struct User {
+    +m_userId: size_t
+    +m_name: string
+}
+
+struct Order {
+    +m_orderId: size_t
+    +m_userId: size_t
+    +m_details: string
+}
+
+IPublisher <|.. Publisher
+IDataReader <|.. CsvDataReader
+Publisher --> User : publishes
+Publisher --> Order : publishes
+Subscriber --> IPublisher : subscribes to
+CsvDataReader --> Publisher : uses
+@enduml
