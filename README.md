@@ -4,8 +4,8 @@ This repository compares different event-driven architecture approaches in C++17
 
 ## Implementations
 
-- [PubSub (Phase 1)](PubSub/README.md)
-- [Dynamic Event System (Phase 2)](DynamicEventSystems/README.md)
+- [PubSub)](PubSub/README.md)
+- [Dynamic Event System](DynamicEventSystems/README.md)
 
 ## Build
 
