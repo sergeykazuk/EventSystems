@@ -1,0 +1,48 @@
+@startuml
+interface "Event Callback" as EventCallback {
+  +operator()(const T&)
+}
+
+class EventSystem {
+  +getInstance(): EventSystem&
+  +sendEvent(T&&)
+  +registerCallback(std::function<void(const T&)>)
+  +init()
+  +shutdown()
+  -m_handlersManager: HandlersManager
+  -m_eventQueue: EventQueue
+}
+
+class EventQueue {
+  +addEvent(TypeID_t, BytePtr)
+  +start()
+  +stop()
+  -m_pimpl: unique_ptr<ClassData>
+}
+
+class HandlersManager {
+  +registerCallback(std::function<void(const T&)>)
+  +dispatchEvent(TypeID_t, const BytePtr&)
+  -m_evCallbacks: unordered_map<TypeID_t, vector<CbWrapper>>
+}
+
+class TypeID {
+  +value<T>(): TypeID_t
+}
+
+class TypeEraser {
+  +createEvent(T&&): BytePtr
+}
+
+class "events::Timestamp" as Timestamp
+class "events::Speed" as Speed
+
+EventSystem --> EventQueue : pushes erased events
+EventSystem --> HandlersManager : registers callbacks
+EventSystem ..> TypeID : resolves type id
+EventSystem ..> TypeEraser : erases payload
+EventQueue --> HandlersManager : dispatches by type id
+HandlersManager ..> EventCallback : calls
+TypeID ..> Timestamp : example type
+TypeID ..> Speed : example type
+@enduml

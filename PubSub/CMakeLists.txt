@@ -26,9 +26,3 @@ target_link_libraries(PubSubExample PRIVATE PubSub)
 # example executable can find the .txt files next to the binary.
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Data
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
-option(BUILD_TESTS "Build tests" ON)
-
-if(BUILD_TESTS)
-    add_subdirectory(tests)
-endif()

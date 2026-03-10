@@ -1,0 +1,32 @@
+@startuml
+participant Main
+participant Producer as Prod
+participant EventSystem as ES
+participant EventQueue as Q
+participant Worker as W
+participant HandlersManager as HM
+
+Main -> ES: registerCallback<Timestamp>(cb)
+ES -> HM: registerCallback(typeId, cbWrapper)
+Main -> ES: init()
+ES -> Q: start(worker thread)
+
+loop Producers send events
+  Prod -> ES: sendEvent(Timestamp/Speed)
+  ES -> ES: TypeID::value<T>()
+  ES -> ES: createEvent(T&&) -> BytePtr
+  ES -> Q: addEvent(typeId, payload)
+  Q -> W: dispatchEvent
+  W -> Q: pop next event
+  W -> HM: dispatchEvent(typeId, payload)
+  HM -> HM: invoke callback(s)
+end
+
+Main -> Prod: stop
+Prod -> Main: stopped
+Main -> ES: shutdown()
+ES -> Q: stop()
+Q -> W: signal stop + join
+W -> Main: returns
+Main -> Main: exit
+@enduml

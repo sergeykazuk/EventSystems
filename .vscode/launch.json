@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug PubSubExample",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/PubSub/build/PubSubExample",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/PubSub/build",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "build",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}
