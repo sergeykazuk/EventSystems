@@ -39,6 +39,7 @@ PlantUML source: [diagrams/dynamic-sequence-diagram.puml](diagrams/dynamic-seque
 
 - **Duplicate callback auto-detection is not reliable**: Callback identity cannot be inferred robustly from generic `std::function` (especially lambdas with captures).
 - **No full unregister flow yet**: Registration token/id and stable removal path are still TODO.
+- **Startup registration overhead**: On each process start, callbacks must be registered at runtime before events can be fully dispatched; this adds startup work and can become noticeable in larger systems.
 - **Stop behavior can drop queued events**: Current shutdown logic stops worker loop; pending events may remain undelivered.
 - **Exception policy for callbacks is not finalized**: Throwing callbacks can affect thread/process behavior unless explicitly guarded.
 - **Thread-safety boundaries are still evolving**: Concurrent callback registration and dispatch policies need to be finalized and tested.
