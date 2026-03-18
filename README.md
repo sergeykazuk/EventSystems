@@ -1,62 +1,16 @@
 # Event Systems: A Comparative Study
 
-This repository serves as a technical portfolio demonstrating modular, scalable architectural patterns for complex environments. These patterns are inspired by my experience delivering Production-Ready Software and SOPs for Tier-1 automotive brands including Audi and VW.
+This repository compares three event-driven architecture approaches in C++ and highlights tradeoffs between simplicity, runtime flexibility, and compile-time safety.
 
-In safety-critical HMI and ADAS development, decoupling communication is not just a preference—it is a requirement for traceability and ISO 26262 compliance.
+## Documentation
 
-## Why This Repository
+Primary documentation is published with MkDocs:
 
-This project compares three architectural styles for event-driven communication in C++:
+- https://sergeykazuk.github.io/EventSystems/
 
-- PubSub baseline for simple decoupling.
-- Dynamic event system for runtime flexibility.
-- Static generated event system for stronger contracts and startup determinism.
+Repository references:
 
-The intent is not to present one universally "best" solution, but to show engineering tradeoffs and architectural evolution from simple to robust.
-
-## At a Glance
-
-| Approach | Best For | Main Strength | Main Tradeoff |
-|---|---|---|---|
-| [PubSub](PubSub/README.md) | Small/medium apps, rapid prototyping | Very low entry cost and simple model | Weaker contract guarantees and lifecycle control |
-| [Dynamic Event System](DynamicEventSystems/README.md) | Extensible systems with runtime event variability | Runtime flexibility and decoupled async dispatch | More runtime complexity and registration overhead |
-| [Static Event System](StaticEventSystem/README.md) | Systems that need strict interfaces and predictable startup | Compile-time contracts + generated APIs | Generator/tooling complexity |
-
-## Comparison Summary
-
-| Dimension | PubSub | Dynamic | Static |
-|---|---|---|---|
-| Type safety | Medium | Medium | High |
-| Runtime flexibility | Medium | High | Low-Medium |
-| Startup determinism | Low | Medium | High |
-| Tooling complexity | Low | Medium | High |
-| Best portfolio signal | Basics and clarity | Runtime architecture | Advanced system design |
-
-## Implementations
-
-- [PubSub](PubSub/README.md)
-- [Dynamic Event System](DynamicEventSystems/README.md)
-- [Static Event System](StaticEventSystem/README.md)
-
-## Build
-
-Each implementation has its own build and run instructions in its local README.
-
-## Notes
-
-- PlantUML sources are stored next to each implementation under its `diagrams/` folder.
-- GitHub does not render PlantUML blocks in Markdown out of the box.
-
-## Suggested Reading Path
-
-1. Start with [PubSub](PubSub/README.md) for the smallest mental model.
-2. Continue with [Dynamic Event System](DynamicEventSystems/README.md) for runtime flexibility.
-3. Finish with [Static Event System](StaticEventSystem/README.md) for generation-based strict interfaces and startup safety.
-
-## License
-
-MIT License - See LICENSE file for details
-
-## Contributing
-
-Contributions welcome! Please open an issue first to discuss proposed changes.
+- [docs/index.md](docs/index.md)
+- [PubSub/README.md](PubSub/README.md)
+- [DynamicEventSystems/README.md](DynamicEventSystems/README.md)
+- [StaticEventSystem/README.md](StaticEventSystem/README.md)
