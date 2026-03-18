@@ -16,11 +16,11 @@ Current flow:
 
 ### Class Diagram
 
-![class_diagram.png](/images/dynamic/class_diagram.png)
+![class_diagram.png](images/dynamic/class_diagram.png)
 
 ### Sequence Diagram
 
-![sequence_diagram.png](/images/dynamic/sequence_diagram.png)
+![sequence_diagram.png](images/dynamic/sequence_diagram.png)
 
 
 ## Positive Sides

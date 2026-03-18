@@ -138,11 +138,11 @@ Stop with `Ctrl+C`.
 
 ### Class Diagram
 
-![class diagram](/images/static/class_diagram.png)
+![class diagram](images/static/class_diagram.png)
 
 ### Sequence Diagram
 
-![sequence diagram](/images/static/sequence_diagram.png)
+![sequence diagram](images/static/sequence_diagram.png)
 
 ## Positive Sides
 
