@@ -138,15 +138,11 @@ Stop with `Ctrl+C`.
 
 ### Class Diagram
 
-![class diagram](../docs/images/static/class_diagram.png)
-
-PlantUML source: [diagrams/static-class-diagram.puml](diagrams/static-class-diagram.puml)
+![class diagram](/images/static/class_diagram.png)
 
 ### Sequence Diagram
 
-![sequence diagram](../docs/images/static/sequence_diagram.png)
-
-PlantUML source: [diagrams/static-sequence-diagram.puml](diagrams/static-sequence-diagram.puml)
+![sequence diagram](/images/static/sequence_diagram.png)
 
 ## Positive Sides
 

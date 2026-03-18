@@ -2,7 +2,7 @@
 
 This repository serves as a technical portfolio demonstrating modular, scalable architectural patterns for complex environments. These patterns are inspired by my experience delivering Production-Ready Software and SOPs for Tier-1 automotive brands including Audi and VW.
 
-In safety-critical HMI and ADAS development, decoupling communication is not just a preference—it is a requirement for traceability and ISO 26262 compliance.
+In safety-critical HMI and ADAS development, decoupling communication is not just a preference, it is a requirement for traceability and ISO 26262 compliance.
 
 ## Why This Repository
 
@@ -18,9 +18,9 @@ The intent is not to present one universally "best" solution, but to show engine
 
 | Approach | Best For | Main Strength | Main Tradeoff |
 |---|---|---|---|
-| [PubSub](PubSub/README.md) | Small/medium apps, rapid prototyping | Very low entry cost and simple model | Weaker contract guarantees and lifecycle control |
-| [Dynamic Event System](DynamicEventSystems/README.md) | Extensible systems with runtime event variability | Runtime flexibility and decoupled async dispatch | More runtime complexity and registration overhead |
-| [Static Event System](StaticEventSystem/README.md) | Systems that need strict interfaces and predictable startup | Compile-time contracts + generated APIs | Generator/tooling complexity |
+| PubSub | Small/medium apps, rapid prototyping | Very low entry cost and simple model | Weaker contract guarantees and lifecycle control |
+| Dynamic Event System | Extensible systems with runtime event variability | Runtime flexibility and decoupled async dispatch | More runtime complexity and registration overhead |
+| Static Event System | Systems that need strict interfaces and predictable startup | Compile-time contracts + generated APIs | Generator/tooling complexity |
 
 ## Comparison Summary
 
@@ -34,13 +34,13 @@ The intent is not to present one universally "best" solution, but to show engine
 
 ## Implementations
 
-- [PubSub](PubSub/README.md)
-- [Dynamic Event System](DynamicEventSystems/README.md)
-- [Static Event System](StaticEventSystem/README.md)
+- [PubSub](PubSub.md)
+- [Dynamic Event System](DynamicES.md)
+- [Static Event System](StaticES.md)
 
 ## Build
 
-Each implementation has its own build and run instructions in its local README.
+Please refer to project specific readmes.
 
 ## Notes
 
@@ -49,9 +49,9 @@ Each implementation has its own build and run instructions in its local README.
 
 ## Suggested Reading Path
 
-1. Start with [PubSub](PubSub/README.md) for the smallest mental model.
-2. Continue with [Dynamic Event System](DynamicEventSystems/README.md) for runtime flexibility.
-3. Finish with [Static Event System](StaticEventSystem/README.md) for generation-based strict interfaces and startup safety.
+1. Start with [PubSub](PubSub.md) for the smallest mental model.
+2. Continue with [Dynamic Event System](DynamicES.md) for runtime flexibility.
+3. Finish with [Static Event System](StaticES.md) for generation-based strict interfaces and startup safety.
 
 ## License
 

@@ -54,22 +54,19 @@ The Publisher-Subscriber pattern is a messaging paradigm where:
 ## Can We Do Better?
 
 Yes. PubSub is a useful baseline, but for larger systems you will usually need stronger lifecycle controls and clearer contracts.
-Lets consider next step: [Dynamic Event System](../DynamicEventSystems/README.md)
+Lets consider next step: [Dynamic Event System](DynamicES.md)
 
 
 ## Architecture
 
 ### Class Diagram
 
-![class diagram](../docs/images/pubsub/class_diagram.png)
-
-PlantUML source: [diagrams/pubsub-class-diagram.puml](diagrams/pubsub-class-diagram.puml)
+![class diagram](images/pubsub/class_diagram.png)
 
 ### Sequence Diagram
 
-![sequence diagram](../docs/images/pubsub/sequence_diagram.png)
+![sequence diagram](images/pubsub/sequence_diagram.png)
 
-PlantUML source: [diagrams/pubsub-sequence-diagram.puml](diagrams/pubsub-sequence-diagram.puml)
 
 ## Build and Run
 

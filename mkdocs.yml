@@ -1,0 +1,10 @@
+site_name: Event Systems, A Comparative Study
+theme:
+  name: material
+  palette:
+    scheme: slate
+nav:
+  - Home: index.md
+  - PubSub: PubSub.md
+  - Dynamic Event System: DynamicES.md
+  - Static Event System: StaticES.md

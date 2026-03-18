@@ -16,13 +16,11 @@ Current flow:
 
 ### Class Diagram
 
-- Plant UML diagram: [diagrams/dynamic-class-diagram.puml](diagrams/dynamic-class-diagram.puml)
-- [class_diagram](../docs/images/dynamic/class_diagram.png)
+![class_diagram.png](/images/dynamic/class_diagram.png)
 
 ### Sequence Diagram
 
-- Plant UML diagram: [diagrams/dynamic-sequence-diagram.puml](diagrams/dynamic-sequence-diagram.puml)
-- [sequence_diagram](../docs/images/dynamic/sequence_diagram.png)
+![sequence_diagram.png](/images/dynamic/sequence_diagram.png)
 
 
 ## Positive Sides
