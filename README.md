@@ -1,6 +1,6 @@
 # Event Systems: A Comparative Study
 
-This repository compares different event-driven architecture approaches in C++17.
+This repository is a comparative exploration of event-system architectures in modern C++, focused on design tradeoffs, maintainability, and evolution from simple callback models to generation-driven static contracts.
 
 ## Implementations
 
