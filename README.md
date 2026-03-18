@@ -4,9 +4,7 @@ This repository compares three event-driven architecture approaches in C++ and h
 
 ## Documentation
 
-Primary documentation is published with MkDocs:
-
-- https://sergeykazuk.github.io/EventSystems/
+[Primary documentation](https://sergeykazuk.github.io/EventSystems/)
 
 Repository references:
 
