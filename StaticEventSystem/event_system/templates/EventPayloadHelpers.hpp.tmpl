@@ -1,0 +1,23 @@
+## -----------------------------------------------------------------------------
+## Cheetah template: EventPayloadHelpers.hpp
+## Expected template context:
+## - namespace_name: string (default: "event_system")
+## - payload_types: list[str] payload type names
+## -----------------------------------------------------------------------------
+
+#set $namespace_name = $getVar('namespace_name', 'event_system')
+#set $payload_types = $getVar('payload_types', [])
+
+/* 
+   This code is generated, don't change it!
+   All the changes here will be dropped during the build!
+*/
+
+\#pragma once
+\#include "core/SystemTypes.hpp"
+
+namespace $namespace_name {
+
+void destroyEventPayload(const EventTypeEnum eventType, BytePtr_t& storage);
+
+}

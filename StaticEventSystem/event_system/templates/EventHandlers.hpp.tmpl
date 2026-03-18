@@ -1,0 +1,56 @@
+## -----------------------------------------------------------------------------
+## Cheetah template: EventHandlers.hpp
+## Expected template context:
+## - namespace_name: string (default: "event_system")
+## - handler_name: string
+## - handler_events: list[str]
+## - events_payload_map: dict[str, str] from events_types.json (events section)
+## - payload_types: list[str] payload type names used by this handler
+## - payload_decls: list[dict{name, kind, base_type?}] payload declaration metadata
+## -----------------------------------------------------------------------------
+
+#set $namespace_name = $getVar('namespace_name', 'event_system')
+#set $handler_name = $getVar('handler_name', '')
+#set $handler_events = $getVar('handler_events', [])
+#set $events_payload_map = $getVar('events_payload_map', {})
+#set $payload_types = $getVar('payload_types', [])
+#set $payload_decls = $getVar('payload_decls', [])
+
+/* 
+   This code is generated, don't change it!
+   All the changes here will be dropped during the build!
+*/
+
+\#pragma once
+\#include "core/IEventHandler.hpp"
+\#include "core/EventTypeEnum.hpp"
+
+namespace $namespace_name {
+
+#for $payload_decl in $payload_decls
+#if $payload_decl.get('kind') == 'enum'
+enum class $payload_decl.get('name') : $payload_decl.get('base_type', 'int');
+#else
+struct $payload_decl.get('name');
+#end if
+#end for
+
+enum class EventHandlerId : uint16_t;
+
+class I${handler_name} : protected IEventHandler
+{
+protected:
+    void processEvent(const EventTypeEnum eventType, const BytePtr_t& eventPayload) override;
+
+    EventHandlerId getEventHandlerId() const;
+
+#for $event_name in $handler_events
+#set $payload_type = $events_payload_map.get($event_name, '')
+#if $payload_type
+    virtual void handleEvent${event_name}(const ${payload_type}& eventPayload) = 0;
+#else
+    virtual void handleEvent${event_name}() = 0;
+#end if
+#end for
+};
+}

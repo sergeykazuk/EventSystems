@@ -1,0 +1,67 @@
+{
+    "name": "event_types",
+    
+    "types": {
+        "base_datatypes": {
+            "Bool": "bool",
+            "Uint8": "uint8_t",
+            "Uint16": "uint16_t",
+            "Uint32": "uint32_t",
+            "Int8": "int8_t",
+            "Int16": "int16_t",
+            "Int32": "int32_t",
+            "String": "std::string"
+        },
+
+        "BoolFlags": {
+            "type": "enum",
+            "base_type": "uint8_t",
+            "values":
+            {
+                "False": "0",
+                "True": "1",
+                "Unknown": "255"
+            }
+        },
+
+        "TimeFormat": {
+            "type": "enum",
+            "base_type": "uint8_t",
+            "values":
+            {
+                "24h": "0",
+                "12h": "1",
+                "Unknown": "255"
+            }
+        },
+
+        "ResultOfSum16":
+        {
+            "type": "struct",
+            "values": {
+                "result": "Int16",
+                "valid": "Bool"
+            }
+        },
+
+        "Timestamp": {
+            "type": "struct",
+            "values": {
+                "hour": "Uint8",
+                "minute": "Uint8",
+                "second": "Uint8",
+                "format": "TimeFormat"
+            }
+        }
+
+    },
+
+    "events": {
+        "EventSystemReady": "",
+        "EventSystemShutdown": "",
+        "Timestamp": "Timestamp",
+        "SumOfTwoInts": "ResultOfSum16",
+        "TestSuccessful": "BoolFlags"
+    }
+
+}

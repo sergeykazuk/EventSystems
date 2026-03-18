@@ -1,0 +1,33 @@
+@startuml
+participant "Config Files\n(event_handlers)" as CFG
+participant "Generator Scripts\n(generate_all.py)" as GEN
+participant App
+participant EventSenders as SEND
+participant EventSystem as ES
+participant EventQueue as Q
+participant EventDispatcher as D
+participant Handler as H
+
+CFG -> GEN: input model
+GEN -> App: generated handler interfaces
+GEN -> SEND: generated sender API
+
+App -> ES: init()
+App -> H: construct handlers
+H -> ES: registerEventHandler(...)
+
+App -> SEND: sendEvent(payload)
+SEND -> ES: sendEvent(eventId, erased payload)
+ES -> Q: addEvent(eventId, payload)
+Q -> D: dispatchEvent(eventId, payload)
+D -> H: processEvent(...)
+H -> H: typed handleEventX(...)
+
+alt Handler can send event back
+H -> SEND: sendEvent(payload)
+end
+
+App -> ES: shutdown()
+ES -> Q: stop()
+H -> ES: unregisterEventHandler(...)
+@enduml

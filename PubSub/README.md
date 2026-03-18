@@ -39,6 +39,24 @@ The Publisher-Subscriber pattern is a messaging paradigm where:
 - **Blocking callback chain**: The processing thread is blocked until all callbacks finish; slow handlers or downstream component calls can delay subsequent events
 - **Performance**: Slower than direct calls or static dispatch
 
+## Where PubSub Is Strong
+
+- Fast to understand and prototype.
+- Very low entry cost for small apps.
+- Good for local event fan-out with limited event taxonomy.
+
+## Where PubSub Is Weak
+
+- Event contracts are implicit and can drift over time.
+- Lifecycle coordination is manual.
+- Hard to scale safely when handler count and event surface grow.
+
+## Can We Do Better?
+
+Yes. PubSub is a useful baseline, but for larger systems you will usually need stronger lifecycle controls and clearer contracts.
+Lets consider next step: [Dynamic Event System](../DynamicEventSystems/README.md)
+
+
 ## Architecture
 
 ### Class Diagram

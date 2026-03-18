@@ -1,0 +1,64 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+package "Event System (Central Component)" {
+  class EventSystem {
+    +getInstance(): EventSystem&
+    +init()
+    +shutdown()
+    +sendEvent(eventId, payload)
+    +registerEventHandler(id, ptr)
+    +unregisterEventHandler(id)
+  }
+
+  class EventQueue {
+    +start()
+    +stop()
+    +addEvent(eventId, payload)
+    +getLastEventData(eventId)
+  }
+
+  class EventDispatcher {
+    +setEventHandlerPtr(id, ptr)
+    +dispatchEvent(eventId, payload)
+  }
+
+  class RegistrationTracker {
+    +registerHandler(id)
+    +unregisterHandler(id)
+    +allRegistered()
+  }
+
+  class EventSenders {
+    +sendEvent(payload)
+  }
+
+
+  interface IEventHandler
+  package "generated" {
+      class IEventHandler_1
+      class IEventHandler_2
+      class ITestResultsHandler
+      class EventPayloadHelpers {
+        +destroyEventPayload(eventId, payload)
+      }
+  }
+}
+
+class AppHandler1
+class AppHandler2
+class AppTestResultsHandler
+
+EventSystem *-- EventQueue
+EventSystem *-- EventDispatcher
+EventSystem *-- RegistrationTracker
+EventSenders ..> EventSystem : forwards
+EventQueue ..> EventDispatcher : dispatches
+EventQueue ..> EventPayloadHelpers : cleanup
+IEventHandler_1 --|> IEventHandler
+IEventHandler_2 --|> IEventHandler
+ITestResultsHandler --|> IEventHandler
+AppHandler1 --|> IEventHandler_1
+AppHandler2 --|> IEventHandler_2
+AppTestResultsHandler --|> ITestResultsHandler
+@enduml

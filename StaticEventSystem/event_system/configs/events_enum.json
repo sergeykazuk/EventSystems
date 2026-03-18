@@ -1,0 +1,12 @@
+{
+    "name": "events_enums",
+    
+    "event_ids": {
+        "EventSystemReady": "1",
+        "EventSystemShutdown": "2",
+        "Timestamp": "3",
+        "SumOfTwoInts": "4",
+        "TestSuccessful": "5"
+    }
+
+}

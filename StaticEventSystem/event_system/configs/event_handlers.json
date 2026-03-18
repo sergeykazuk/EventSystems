@@ -1,0 +1,36 @@
+{
+    "name": "event_handlers",
+
+
+    "EventQueues":
+    [
+        "default"
+    ],
+
+    "handlers": {
+        "EventHandler_1": {
+            "events":
+                [
+                "EventSystemReady",
+                "EventSystemShutdown",
+                "Timestamp"
+                ]
+        },
+
+        "EventHandler_2": {
+        "events":
+            [
+            "Timestamp",
+            "SumOfTwoInts"
+            ]
+        },
+
+        "TestResultsHandler": {
+        "events":
+            [
+            "TestSuccessful",
+            "EventSystemShutdown"
+            ]
+        }
+    }
+}

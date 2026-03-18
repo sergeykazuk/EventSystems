@@ -1,0 +1,63 @@
+## -----------------------------------------------------------------------------
+## Cheetah template: EventHandlers.cpp
+## Expected template context:
+## - namespace_name: string (default: "event_system")
+## - handler_name: string
+## - handler_events: list[str]
+## - events_payload_map: dict[str, str] from events_types.json (events section)
+## - payload_types: list[str] payload type names used by this handler
+## -----------------------------------------------------------------------------
+
+#set $namespace_name = $getVar('namespace_name', 'event_system')
+#set $handler_name = $getVar('handler_name', '')
+#set $handler_events = $getVar('handler_events', [])
+#set $events_payload_map = $getVar('events_payload_map', {})
+#set $payload_types = $getVar('payload_types', [])
+
+/* 
+   This code is generated, don't change it!
+   All the changes here will be dropped during the build!
+*/
+
+\#include "handlers/I${handler_name}.hpp"
+#for $payload_type in $payload_types
+\#include "types/${payload_type}.hpp"
+#end for
+\#include "core/EventHandlerId.hpp"
+
+namespace $namespace_name {
+
+EventHandlerId I${handler_name}::getEventHandlerId() const
+{
+    return EventHandlerId::e${handler_name};
+}
+
+void I${handler_name}::processEvent(const EventTypeEnum eventType, const BytePtr_t& eventPayload)
+{
+    switch (eventType)
+    {
+#for $event_name in $handler_events
+#set $payload_type = $events_payload_map.get($event_name, '')
+    case EventTypeEnum::e${event_name}:
+    {
+#if $payload_type
+        if (eventPayload == nullptr)
+        {
+            break;
+        }
+
+        const auto* typedPayload = reinterpret_cast<const ${payload_type}*>(eventPayload.get());
+        handleEvent${event_name}(*typedPayload);
+#else
+        handleEvent${event_name}();
+#end if
+        break;
+    }
+#end for
+    default:
+    {
+        break;
+    }
+    }
+}
+}

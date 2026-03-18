@@ -1,0 +1,73 @@
+## -----------------------------------------------------------------------------
+## Cheetah template: EventSenders.cpp
+## Expected template context:
+## - namespace_name: string (default: "event_system")
+## - events_map: dict[str, str] mapping event name to payload type or ""
+## - payload_types: list[str] payload type names
+## -----------------------------------------------------------------------------
+
+#set $namespace_name = $getVar('namespace_name', 'event_system')
+#set $events_map = $getVar('events_map', {})
+#set $payload_types = $getVar('payload_types', [])
+
+/* 
+   This code is generated, don't change it!
+   All the changes here will be dropped during the build!
+*/
+
+
+\#include "system/EventSenders.hpp"
+\#include "system/EventSystem.hpp"
+\#include "core/EventTypeEnum.hpp"
+#for $payload_type in $payload_types
+\#include "types/${payload_type}.hpp"
+#end for
+\#include <new>
+\#include <cstring>
+\#include <type_traits>
+
+namespace {
+
+template <typename T>
+$namespace_name::BytePtr_t erasePayload(T&& eventPayload)
+{
+    using EventPayloadT = std::decay_t<T>;
+
+    auto erased = std::make_unique<std::byte[]>(sizeof(EventPayloadT));
+
+    if constexpr (std::is_trivially_copyable_v<EventPayloadT>)
+    {
+        std::memcpy(erased.get(), &eventPayload, sizeof(EventPayloadT));
+        return erased;
+    }
+
+    new (erased.get()) EventPayloadT(std::forward<T>(eventPayload));
+    return erased;
+}
+
+}
+
+namespace $namespace_name {
+
+#for $event_name, $payload_type in $events_map.items()
+#if $event_name != 'EventSystemReady' and $event_name != 'EventSystemShutdown'
+#if $payload_type
+void sendEvent(const ${payload_type}& eventPayload)
+{
+    EventSystem::getInstance().sendEvent(EventTypeEnum::e${event_name}, erasePayload(eventPayload));
+}
+
+void sendEvent(${payload_type}&& eventPayload)
+{
+    EventSystem::getInstance().sendEvent(EventTypeEnum::e${event_name}, erasePayload(std::move(eventPayload)));
+}
+#else
+void sendEvent${event_name}()
+{
+    EventSystem::getInstance().sendEvent(EventTypeEnum::e${event_name}, BytePtr_t{});
+}
+#end if
+#end if
+#end for
+
+}

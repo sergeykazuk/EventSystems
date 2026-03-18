@@ -1,6 +1,6 @@
-# Dynamic Event System (Phase 2)
+# Dynamic Event System
 
-This module explores a runtime-typed event system in C++17 with type erasure, asynchronous queue dispatch, and callback registration by event type.
+This module explores a runtime-typed event system with type erasure, asynchronous queue dispatch, and callback registration by event type.
 
 ## Overview
 
@@ -16,15 +16,13 @@ Current flow:
 
 ### Class Diagram
 
-![class diagram](images/class_diagram.png)
-
-PlantUML source: [diagrams/dynamic-class-diagram.puml](diagrams/dynamic-class-diagram.puml)
+- Primary source: [diagrams/dynamic-class-diagram.puml](diagrams/dynamic-class-diagram.puml)
+- Optional rendered image: [images/class_diagram.png](images/class_diagram.png)
 
 ### Sequence Diagram
 
-![sequence diagram](images/sequence_diagram.png)
-
-PlantUML source: [diagrams/dynamic-sequence-diagram.puml](diagrams/dynamic-sequence-diagram.puml)
+- Primary source: [diagrams/dynamic-sequence-diagram.puml](diagrams/dynamic-sequence-diagram.puml)
+- Optional rendered image: [images/sequence_diagram.png](images/sequence_diagram.png)
 
 
 ## Positive Sides
@@ -43,6 +41,23 @@ PlantUML source: [diagrams/dynamic-sequence-diagram.puml](diagrams/dynamic-seque
 - **Stop behavior can drop queued events**: Current shutdown logic stops worker loop; pending events may remain undelivered.
 - **Exception policy for callbacks is not finalized**: Throwing callbacks can affect thread/process behavior unless explicitly guarded.
 - **Thread-safety boundaries are still evolving**: Concurrent callback registration and dispatch policies need to be finalized and tested.
+
+## Where Dynamic Is Strong
+
+- Event payload model can evolve without regenerating interfaces.
+- Good for plugin-like systems where event sets are not closed at compile time.
+- Useful as a migration stage between simple PubSub and strict static contracts.
+
+## Where Dynamic Is Weak
+
+- Runtime registration and erasure add operational/debug complexity.
+- Invalid combinations are detected later than in static models.
+- Harder to guarantee complete startup readiness compared to static registration-gates.
+
+## Can We Do Better?
+
+Yes. This implementation intentionally highlights where runtime flexibility helps and where it hurts.
+If your priority is stronger compile-time contracts and cleaner consumer APIs, see the [Static Event System](../StaticEventSystem/README.md)
 
 ## Callback Registration Policy
 

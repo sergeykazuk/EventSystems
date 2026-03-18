@@ -1,0 +1,69 @@
+## -----------------------------------------------------------------------------
+## Cheetah template: EventHandlersMapBuilder.cpp
+## Expected template context:
+## - event_handlers_config: parsed JSON from configs/event_handlers.json
+## - events_enum_config:    parsed JSON from configs/events_enum.json
+##
+## Optional context values:
+## - namespace_name    (default: "event_system")
+## - queue_enum_name   (default: "EventQueueId")
+## - event_enum_name   (default: "EventTypeEnum")
+## - handler_enum_name (default: "EventHandlerId")
+## - map_fn_name       (default: "buildEventHandlersMap")
+##
+## Naming convention assumptions:
+## - EventTypeEnum::<EventName>
+## - EventHandlerId::<HandlerName>
+## - EventQueueId::e<QueueNameCamelCase>
+## -----------------------------------------------------------------------------
+
+#set $namespace_name = $getVar('namespace_name', 'event_system')
+#set $queue_enum_name = $getVar('queue_enum_name', 'EventQueueId')
+#set $event_enum_name = $getVar('event_enum_name', 'EventTypeEnum')
+#set $handler_enum_name = $getVar('handler_enum_name', 'EventHandlerId')
+#set $map_fn_name = $getVar('map_fn_name', 'buildEventHandlersMap')
+
+/* 
+   This code is generated, don't change it!
+   All the changes here will be dropped during the build!
+*/
+
+\#include "core/EventHandlersMapBuilder.hpp"
+\#include "core/EventTypeEnum.hpp"
+\#include "core/EventHandlerId.hpp"
+\#include "core/EventQueueId.hpp"
+
+namespace $namespace_name {
+
+EventHandlersMap_t ${map_fn_name}(const ${queue_enum_name} queueId)
+{
+    EventHandlersMap_t eventHandlersMap{};
+
+    switch (queueId)
+    {
+#for $queue_name in $event_handlers_config.get('EventQueues', [])
+#set $queue_enum_suffix = $queue_name[:1].upper() + $queue_name[1:]
+    case ${queue_enum_name}::e${queue_enum_suffix}:
+    {
+#for $event_name, $event_id in $events_enum_config.get('event_ids', {}).items()
+        eventHandlersMap.insert_or_assign(${event_enum_name}::e${event_name}, HandlerIds_t{
+#for $handler_name, $handler_cfg in $event_handlers_config.get('handlers', {}).items()
+#if $event_name in $handler_cfg.get('events', [])
+            ${handler_enum_name}::e${handler_name},
+#end if
+#end for
+        });
+#end for
+        break;
+    }
+#end for
+    default:
+    {
+        break;
+    }
+    }
+
+    return eventHandlersMap;
+}
+
+}

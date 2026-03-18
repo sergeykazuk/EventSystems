@@ -16,7 +16,7 @@ loop Producers send events
   ES -> ES: TypeID::value<T>()
   ES -> ES: createEvent(T&&) -> BytePtr
   ES -> Q: addEvent(typeId, payload)
-  Q -> W: dispatchEvent
+  Q -> W: wake worker
   W -> Q: pop next event
   W -> HM: dispatchEvent(typeId, payload)
   HM -> HM: invoke callback(s)
