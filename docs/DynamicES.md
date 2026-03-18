@@ -55,7 +55,7 @@ Current flow:
 ## Can We Do Better?
 
 Yes. This implementation intentionally highlights where runtime flexibility helps and where it hurts.
-If your priority is stronger compile-time contracts and cleaner consumer APIs, see the [Static Event System](../StaticEventSystem/README.md)
+If your priority is stronger compile-time contracts and cleaner consumer APIs, see the [Static Event System](StaticES.md)
 
 ## Callback Registration Policy
 
@@ -77,6 +77,6 @@ cmake --build .
 
 ## Example Events
 
-Defined in [events/events.hpp](events/events.hpp):
+Defined in `events/events.hpp`:
 - `events::Timestamp`
 - `events::Speed`

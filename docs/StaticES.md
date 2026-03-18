@@ -21,7 +21,7 @@ Compared to runtime-only registration models, this design gives:
 
 ## Core Components
 
-This type of system has some similarities with [Dynamic Event System](../DynamicEventSystems/README.md)
+This type of system has some similarities with [Dynamic Event System](DynamicES.md)
 
 - `EventSystem`
   - Public facade and lifecycle owner.
