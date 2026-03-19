@@ -1,0 +1,38 @@
+## -----------------------------------------------------------------------------
+## Cheetah template: LastEventGetters.hpp
+## Expected template context:
+## - namespace_name: string (default: "event_system")
+## - events_map: dict[str, str] mapping event name to payload type or ""
+## - payload_types: list[str] payload type names
+## -----------------------------------------------------------------------------
+
+#set $namespace_name = $getVar('namespace_name', 'event_system')
+#set $events_map = $getVar('events_map', {})
+#set $payload_types = $getVar('payload_types', [])
+#set $payload_decls = $getVar('payload_decls', [])
+
+/* 
+   This code is generated, don't change it!
+   All the changes here will be dropped during the build!
+*/
+
+\#pragma once
+\#include <cstdint>
+
+namespace $namespace_name {
+
+#for $payload_decl in $payload_decls
+#if $payload_decl.get('kind') == 'enum'
+enum class ${payload_decl.get('name')} : ${payload_decl.get('base_type', 'int')};
+#else
+struct ${payload_decl.get('name')};
+#end if
+#end for
+
+#for $event_name, $payload_type in $events_map.items()
+#if $payload_type
+bool getLastEvent${event_name}(${payload_type}& outPayload);
+#end if
+#end for
+
+}

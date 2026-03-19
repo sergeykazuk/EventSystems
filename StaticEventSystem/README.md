@@ -180,6 +180,19 @@ PlantUML source: [diagrams/static-sequence-diagram.puml](diagrams/static-sequenc
 - Concurrency-sensitive internals still need careful hardening.
 - Refactors require synchronized changes in scripts + templates + runtime.
 
+## Shutdown Policy
+
+StaticEventSystem uses discard semantics on shutdown:
+
+- new events are rejected,
+- queued but not yet dispatched events are discarded,
+- worker thread stops without queue draining.
+
+Decision rationale is captured in ADR:
+
+- [docs/adr/0001-static-event-queue-stop-policy.md](../docs/adr/0001-static-event-queue-stop-policy.md)
+- [docs/adr/0002-last-event-data-visitor-access.md](../docs/adr/0002-last-event-data-visitor-access.md)
+
 ## Can it be better?
 
 Yes. Future improvements:

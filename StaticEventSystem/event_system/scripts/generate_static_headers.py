@@ -23,6 +23,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--senders-cpp-template", type=Path, default=None, help="Path to EventSenders.cpp.tmpl")
     parser.add_argument("--payload-helpers-template", type=Path, default=None, help="Path to EventPayloadHelpers.hpp.tmpl")
     parser.add_argument("--payload-helpers-cpp-template", type=Path, default=None, help="Path to EventPayloadHelpers.cpp.tmpl")
+    parser.add_argument("--last-event-getters-template", type=Path, default=None, help="Path to LastEventGetters.hpp.tmpl")
+    parser.add_argument("--last-event-getters-cpp-template", type=Path, default=None, help="Path to LastEventGetters.cpp.tmpl")
     parser.add_argument("--out-include", type=Path, default=None, help="Output include dir")
     parser.add_argument("--out-source", type=Path, default=None, help="Output source dir")
     return parser.parse_args()
@@ -54,6 +56,8 @@ def main() -> int:
     senders_cpp_template_path = (args.senders_cpp_template or args.helpers_cpp_template or root / "templates" / "EventSenders.cpp.tmpl").resolve()
     payload_helpers_template_path = (args.payload_helpers_template or root / "templates" / "EventPayloadHelpers.hpp.tmpl").resolve()
     payload_helpers_cpp_template_path = (args.payload_helpers_cpp_template or root / "templates" / "EventPayloadHelpers.cpp.tmpl").resolve()
+    last_event_getters_template_path = (args.last_event_getters_template or root / "templates" / "LastEventGetters.hpp.tmpl").resolve()
+    last_event_getters_cpp_template_path = (args.last_event_getters_cpp_template or root / "templates" / "LastEventGetters.cpp.tmpl").resolve()
     out_include = (args.out_include or root / "generated" / "include").resolve()
     out_source = (args.out_source or root / "generated" / "src").resolve()
 
@@ -64,6 +68,8 @@ def main() -> int:
             senders_cpp_template_path,
             payload_helpers_template_path,
             payload_helpers_cpp_template_path,
+            last_event_getters_template_path,
+            last_event_getters_cpp_template_path,
         )
         if not path.exists()
     ]
@@ -158,6 +164,14 @@ def main() -> int:
     write(
         out_source / "core" / "EventPayloadHelpers.cpp",
         render_cheetah_template(payload_helpers_cpp_template_path, helper_context),
+    )
+    write(
+        out_include / "system" / "LastEventGetters.hpp",
+        render_cheetah_template(last_event_getters_template_path, helper_context),
+    )
+    write(
+        out_source / "system" / "LastEventGetters.cpp",
+        render_cheetah_template(last_event_getters_cpp_template_path, helper_context),
     )
 
     print(f"Generated headers in: {out_include}")

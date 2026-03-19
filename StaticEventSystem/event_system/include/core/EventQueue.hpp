@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <functional>
 #include "core/SystemTypes.hpp"
 
 namespace event_system {
@@ -15,7 +16,8 @@ public:
     EventQueue& operator=(EventQueue&&) = delete;
 
     void addEvent(const EventTypeEnum, BytePtr_t&& data);
-    const BytePtr_t& getLastEventData(const EventTypeEnum) const;
+    bool getLastEventData(const EventTypeEnum,
+        const std::function<void(const BytePtr_t&)>& visitor) const;
     void start();
     void stop();
 

@@ -69,6 +69,7 @@ The same incremental command pattern applies to `PubSub/build` and `DynamicEvent
 
 - PlantUML sources are stored next to each implementation under its `diagrams/` folder.
 - GitHub does not render PlantUML blocks in Markdown out of the box.
+- Architecture decisions are tracked in `docs/adr/`.
 
 ## Suggested Reading Path
 

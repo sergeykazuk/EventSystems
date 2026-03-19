@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <functional>
 #include "core/SystemTypes.hpp"
 #include "core/EventSystemOperationResult.hpp"
 
@@ -17,7 +18,8 @@ public:
 
     [[nodiscard]] EventSystemOperationResult unregisterEventHandler(const EventHandlerId);
 
-    const BytePtr_t& getLastEventData(const EventTypeEnum) const;
+    bool getLastEventData(const EventTypeEnum,
+        const std::function<void(const BytePtr_t&)>& visitor) const;
 
     void init();
     void shutdown();

@@ -8,3 +8,6 @@ nav:
   - PubSub: PubSub.md
   - Dynamic Event System: DynamicES.md
   - Static Event System: StaticES.md
+  - ADRs:
+    - Static Queue Stop Policy: adr/0001-static-event-queue-stop-policy.md
+    - Last Event Data Visitor Access: adr/0002-last-event-data-visitor-access.md

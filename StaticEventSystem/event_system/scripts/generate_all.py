@@ -21,6 +21,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--senders-cpp-template", type=Path, default=None, help="Path to EventSenders.cpp.tmpl")
     parser.add_argument("--payload-helpers-template", type=Path, default=None, help="Path to EventPayloadHelpers.hpp.tmpl")
     parser.add_argument("--payload-helpers-cpp-template", type=Path, default=None, help="Path to EventPayloadHelpers.cpp.tmpl")
+    parser.add_argument("--last-event-getters-template", type=Path, default=None, help="Path to LastEventGetters.hpp.tmpl")
+    parser.add_argument("--last-event-getters-cpp-template", type=Path, default=None, help="Path to LastEventGetters.cpp.tmpl")
     parser.add_argument("--out-include", type=Path, default=None, help="Output include dir")
     parser.add_argument("--out-source", type=Path, default=None, help="Output source dir")
 
@@ -57,6 +59,8 @@ def main() -> int:
     senders_cpp_template_path = (args.senders_cpp_template or args.helpers_cpp_template or root / "templates" / "EventSenders.cpp.tmpl").resolve()
     payload_helpers_template_path = (args.payload_helpers_template or root / "templates" / "EventPayloadHelpers.hpp.tmpl").resolve()
     payload_helpers_cpp_template_path = (args.payload_helpers_cpp_template or root / "templates" / "EventPayloadHelpers.cpp.tmpl").resolve()
+    last_event_getters_template_path = (args.last_event_getters_template or root / "templates" / "LastEventGetters.hpp.tmpl").resolve()
+    last_event_getters_cpp_template_path = (args.last_event_getters_cpp_template or root / "templates" / "LastEventGetters.cpp.tmpl").resolve()
     out_include_path = (args.out_include or root / "generated" / "include").resolve()
     out_source_path = (args.out_source or root / "generated" / "src").resolve()
 
@@ -90,6 +94,10 @@ def main() -> int:
             str(payload_helpers_template_path),
             "--payload-helpers-cpp-template",
             str(payload_helpers_cpp_template_path),
+            "--last-event-getters-template",
+            str(last_event_getters_template_path),
+            "--last-event-getters-cpp-template",
+            str(last_event_getters_cpp_template_path),
             "--out-include",
             str(out_include_path),
             "--out-source",

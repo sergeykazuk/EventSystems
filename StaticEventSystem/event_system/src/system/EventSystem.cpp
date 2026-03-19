@@ -31,7 +31,8 @@ namespace event_system
             registerEventHandler(const EventHandlerId, IEventHandler* const);
         EventSystemOperationResult 
             unregisterEventHandler(const EventHandlerId);
-        const BytePtr_t& getLastEventData(const EventTypeEnum) const;
+        bool getLastEventData(const EventTypeEnum,
+            const std::function<void(const BytePtr_t&)>& visitor) const;
 
     private:
         void start();
@@ -59,6 +60,8 @@ namespace event_system
             return;
         }
 
+        // Shutdown discards queued events to avoid dispatching while handlers
+        // may already be in destruction/unregistration paths.
         m_queue.stop();
     }
 
@@ -120,9 +123,10 @@ namespace event_system
         return EventSystemOperationResult::eSuccess;
     }
 
-    const BytePtr_t& EventSystem::ClassData::getLastEventData(const EventTypeEnum eventId) const
+    bool EventSystem::ClassData::getLastEventData(const EventTypeEnum eventId,
+        const std::function<void(const BytePtr_t&)>& visitor) const
     {
-        return m_queue.getLastEventData(eventId);
+        return m_queue.getLastEventData(eventId, visitor);
     }
 
     EventSystem::EventSystem()
@@ -161,9 +165,10 @@ namespace event_system
         return m_pimpl->unregisterEventHandler(handlerId);
     }
 
-    const BytePtr_t& EventSystem::getLastEventData(const EventTypeEnum eventId) const
+    bool EventSystem::getLastEventData(const EventTypeEnum eventId,
+        const std::function<void(const BytePtr_t&)>& visitor) const
     {
-        return m_pimpl->getLastEventData(eventId);
+        return m_pimpl->getLastEventData(eventId, visitor);
     }
 
 }

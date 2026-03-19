@@ -1,0 +1,52 @@
+## -----------------------------------------------------------------------------
+## Cheetah template: LastEventGetters.cpp
+## Expected template context:
+## - namespace_name: string (default: "event_system")
+## - events_map: dict[str, str] mapping event name to payload type or ""
+## - payload_types: list[str] payload type names
+## -----------------------------------------------------------------------------
+
+#set $namespace_name = $getVar('namespace_name', 'event_system')
+#set $events_map = $getVar('events_map', {})
+#set $payload_types = $getVar('payload_types', [])
+
+/* 
+   This code is generated, don't change it!
+   All the changes here will be dropped during the build!
+*/
+
+\#include "system/LastEventGetters.hpp"
+\#include "core/EventTypeEnum.hpp"
+\#include "system/EventSystem.hpp"
+#for $payload_type in $payload_types
+\#include "types/${payload_type}.hpp"
+#end for
+
+namespace $namespace_name {
+
+#for $event_name, $payload_type in $events_map.items()
+#if $payload_type
+bool getLastEvent${event_name}(${payload_type}& outPayload)
+{
+    bool copied{false};
+
+    const bool hasValue = EventSystem::getInstance().getLastEventData(
+        EventTypeEnum::e${event_name},
+        [&copied, &outPayload](const BytePtr_t& payload)
+        {
+            if (payload == nullptr)
+            {
+                return;
+            }
+
+            outPayload = *reinterpret_cast<const ${payload_type}*>(payload.get());
+            copied = true;
+        });
+
+    return hasValue && copied;
+}
+
+#end if
+#end for
+
+}
