@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "core/SystemTypes.hpp"
+#include "core/EventSystemOperationResult.hpp"
 
 namespace event_system {
 
@@ -12,9 +13,9 @@ public:
 
     void sendEvent(const EventTypeEnum, BytePtr_t&&);
 
-    void registerEventHandler(const EventHandlerId, IEventHandler* const);
+    [[nodiscard]] EventSystemOperationResult registerEventHandler(const EventHandlerId, IEventHandler* const);
 
-    void unregisterEventHandler(const EventHandlerId);
+    [[nodiscard]] EventSystemOperationResult unregisterEventHandler(const EventHandlerId);
 
     const BytePtr_t& getLastEventData(const EventTypeEnum) const;
 

@@ -10,12 +10,22 @@ namespace app
 
 EventHandler1::EventHandler1()
 {
-    event_system::registerEventHandler(getEventHandlerId(), this);
+    const auto result = event_system::registerEventHandler(getEventHandlerId(), this);
+    if (result != event_system::EventSystemOperationResult::eSuccess)
+    {
+        std::cerr << "[EventHandler1] registerEventHandler failed, result="
+                  << event_system::toString(result) << "\n";
+    }
 }
 
 EventHandler1::~EventHandler1()
 {
-    event_system::unregisterEventHandler(getEventHandlerId());
+    const auto result = event_system::unregisterEventHandler(getEventHandlerId());
+    if (result != event_system::EventSystemOperationResult::eSuccess)
+    {
+        std::cerr << "[EventHandler1] unregisterEventHandler failed, result="
+                  << event_system::toString(result) << "\n";
+    }
 }
 
 void EventHandler1::handleEventEventSystemReady()

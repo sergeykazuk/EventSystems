@@ -3,14 +3,14 @@
 
 namespace event_system {
 
-void registerEventHandler(const EventHandlerId hId, IEventHandler* const ptr)
+EventSystemOperationResult registerEventHandler(const EventHandlerId hId, IEventHandler* const ptr)
 {
-    EventSystem::getInstance().registerEventHandler(hId, ptr);
+    return EventSystem::getInstance().registerEventHandler(hId, ptr);
 }
 
-void unregisterEventHandler(const EventHandlerId hId)
+EventSystemOperationResult unregisterEventHandler(const EventHandlerId hId)
 {
-    EventSystem::getInstance().unregisterEventHandler(hId);
+    return EventSystem::getInstance().unregisterEventHandler(hId);
 }
 
 }

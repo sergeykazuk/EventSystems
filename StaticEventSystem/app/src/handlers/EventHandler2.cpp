@@ -10,12 +10,22 @@ namespace app
 
 EventHandler2::EventHandler2()
 {
-    event_system::registerEventHandler(getEventHandlerId(), this);
+    const auto result = event_system::registerEventHandler(getEventHandlerId(), this);
+    if (result != event_system::EventSystemOperationResult::eSuccess)
+    {
+        std::cerr << "[EventHandler2] registerEventHandler failed, result="
+                  << event_system::toString(result) << "\n";
+    }
 }
 
 EventHandler2::~EventHandler2()
 {
-    event_system::unregisterEventHandler(getEventHandlerId());
+    const auto result = event_system::unregisterEventHandler(getEventHandlerId());
+    if (result != event_system::EventSystemOperationResult::eSuccess)
+    {
+        std::cerr << "[EventHandler2] unregisterEventHandler failed, result="
+                  << event_system::toString(result) << "\n";
+    }
 }
 
 void EventHandler2::handleEventTimestamp(const event_system::Timestamp& event)

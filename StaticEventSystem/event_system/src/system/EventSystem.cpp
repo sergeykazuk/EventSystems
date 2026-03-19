@@ -12,6 +12,13 @@ namespace event_system
 
     struct EventSystem::ClassData
     {
+        enum class State : uint8_t
+        {
+            eWaitingForHandlers = 0,
+            eRunning,
+            eStopped
+        };
+
         ClassData()
             : m_dispatcher(buildEventHandlersMap(EventQueueId::eDefault))
             , m_queue(m_dispatcher)
@@ -20,8 +27,10 @@ namespace event_system
 
         void stop();
         void sendEvent(const EventTypeEnum, BytePtr_t&&);
-        void registerEventHandler(const EventHandlerId, IEventHandler* const);
-        void unregisterEventHandler(const EventHandlerId);
+        EventSystemOperationResult 
+            registerEventHandler(const EventHandlerId, IEventHandler* const);
+        EventSystemOperationResult 
+            unregisterEventHandler(const EventHandlerId);
         const BytePtr_t& getLastEventData(const EventTypeEnum) const;
 
     private:
@@ -30,17 +39,26 @@ namespace event_system
         EventDispatcher m_dispatcher;
         EventQueue m_queue;
         RegistrationTracker m_registrationTracker{};
-        std::atomic<bool> m_stopCalled{false};
+        std::atomic<State> m_state{State::eWaitingForHandlers};
     };
 
     void EventSystem::ClassData::start()
     {
-        m_queue.start();
+        auto expectedState{State::eWaitingForHandlers};
+        if (m_state.compare_exchange_strong(expectedState, State::eRunning))
+        {
+            m_queue.start();
+        }
     }
 
     void EventSystem::ClassData::stop()
     {
-        m_stopCalled.store(true, std::memory_order_relaxed);
+        const State previousState = m_state.exchange(State::eStopped);
+        if (previousState == State::eStopped)
+        {
+            return;
+        }
+
         m_queue.stop();
     }
 
@@ -49,17 +67,27 @@ namespace event_system
         m_queue.addEvent(eventId, std::move(data));
     }
 
-    void EventSystem::ClassData::registerEventHandler(const EventHandlerId handlerId
+    EventSystemOperationResult EventSystem::ClassData::registerEventHandler(const EventHandlerId handlerId
         , IEventHandler* const handlerPtr)
     {
-        if (handlerPtr == nullptr || m_registrationTracker.allRegistered())
+        if (handlerPtr == nullptr)
         {
-            return;
+            return EventSystemOperationResult::eNullHandler;
+        }
+
+        if (m_state.load(std::memory_order_relaxed) != State::eWaitingForHandlers)
+        {
+            return EventSystemOperationResult::eInvalidState;
+        }
+
+        if (handlerId == EventHandlerId::eHandlersCount)
+        {
+            return EventSystemOperationResult::eOutOfRangeHandlerId;
         }
 
         if (!m_registrationTracker.registerHandler(handlerId))
         {
-            return;
+            return EventSystemOperationResult::eAlreadyRegistered;
         }
 
         m_dispatcher.setEventHandlerPtr(handlerId, handlerPtr);
@@ -69,19 +97,27 @@ namespace event_system
             start();
             sendEvent(EventTypeEnum::eEventSystemReady, {});
         }
+
+        return EventSystemOperationResult::eSuccess;
     }
 
-    void EventSystem::ClassData::unregisterEventHandler(const EventHandlerId handlerId)
+    EventSystemOperationResult EventSystem::ClassData::unregisterEventHandler(const EventHandlerId handlerId)
     {
-        if (!m_stopCalled.load(std::memory_order_relaxed))
+        if (m_state.load(std::memory_order_relaxed) != State::eStopped)
         {
             std::cout << "Cannot unregister '" << toString(handlerId) 
                 << "', event system is still active! Stop it first.\n";
-            return;
+            return EventSystemOperationResult::eInvalidState;
+        }
+
+        if (handlerId == EventHandlerId::eHandlersCount)
+        {
+            return EventSystemOperationResult::eOutOfRangeHandlerId;
         }
 
         m_dispatcher.setEventHandlerPtr(handlerId, nullptr);
         m_registrationTracker.unregisterHandler(handlerId);
+        return EventSystemOperationResult::eSuccess;
     }
 
     const BytePtr_t& EventSystem::ClassData::getLastEventData(const EventTypeEnum eventId) const
@@ -114,15 +150,15 @@ namespace event_system
         m_pimpl->stop();
     }
 
-    void EventSystem::registerEventHandler(const EventHandlerId handlerId
+    EventSystemOperationResult EventSystem::registerEventHandler(const EventHandlerId handlerId
         , IEventHandler* const handlerPtr)
     {
-        m_pimpl->registerEventHandler(handlerId, handlerPtr);
+        return m_pimpl->registerEventHandler(handlerId, handlerPtr);
     }
 
-    void EventSystem::unregisterEventHandler(const EventHandlerId handlerId)
+    EventSystemOperationResult EventSystem::unregisterEventHandler(const EventHandlerId handlerId)
     {
-        m_pimpl->unregisterEventHandler(handlerId);
+        return m_pimpl->unregisterEventHandler(handlerId);
     }
 
     const BytePtr_t& EventSystem::getLastEventData(const EventTypeEnum eventId) const

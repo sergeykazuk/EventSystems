@@ -8,12 +8,22 @@ namespace app
 
 TestResultsHandler::TestResultsHandler()
 {
-    event_system::registerEventHandler(getEventHandlerId(), this);
+    const auto result = event_system::registerEventHandler(getEventHandlerId(), this);
+    if (result != event_system::EventSystemOperationResult::eSuccess)
+    {
+        std::cerr << "[TestResultsHandler] registerEventHandler failed, result="
+                  << event_system::toString(result) << "\n";
+    }
 }
 
 TestResultsHandler::~TestResultsHandler()
 {
-    event_system::unregisterEventHandler(getEventHandlerId());
+    const auto result = event_system::unregisterEventHandler(getEventHandlerId());
+    if (result != event_system::EventSystemOperationResult::eSuccess)
+    {
+        std::cerr << "[TestResultsHandler] unregisterEventHandler failed, result="
+                  << event_system::toString(result) << "\n";
+    }
 }
 
 void TestResultsHandler::handleEventTestSuccessful(const event_system::BoolFlags& event)
