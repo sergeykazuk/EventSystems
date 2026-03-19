@@ -106,6 +106,24 @@ private:
 };
 ```
 
+## Prerequisites
+
+Code generation depends on Python and `Cheetah3`.
+
+Install dependency:
+
+```bash
+python3 -m pip install Cheetah3
+```
+
+If you have multiple Python installations, CMake may pick an interpreter that does not have `Cheetah3` installed. In that case, set the interpreter explicitly:
+
+```bash
+cmake -S . -B build -DPython3_EXECUTABLE=/usr/bin/python3
+```
+
+Replace `/usr/bin/python3` with the Python executable where `Cheetah3` is installed.
+
 ## How to Generate Interfaces and Sources
 
 From `event_system` directory:

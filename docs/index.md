@@ -40,7 +40,30 @@ The intent is not to present one universally "best" solution, but to show engine
 
 ## Build
 
-Please refer to project specific readmes.
+You can use the top-level script for a clean configure + build:
+
+```bash
+python3 build.py -p pubsub
+python3 build.py -p dynamic
+python3 build.py -p static
+```
+
+Or build everything:
+
+```bash
+python3 build.py -p all
+python3 build.py
+```
+
+After the first configure/build, you can use incremental builds directly with CMake from a project build folder:
+
+```bash
+cd StaticEventSystem/build
+cmake --build . -j8
+```
+
+The same incremental command pattern applies to `PubSub/build` and `DynamicEventSystem/build`.
+`build.py` is intended for clean configure/build runs.
 
 ## Notes
 
