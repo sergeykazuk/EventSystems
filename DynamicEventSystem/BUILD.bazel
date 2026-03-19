@@ -1,0 +1,16 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+cc_library(
+    name = "dynamic_event_system_lib",
+    srcs = glob(["src/*.cpp"]),
+    hdrs = glob(["include/*.hpp", "events/*.hpp"]),
+    includes = ["include", "events"],
+    copts = ["-std=c++17"],
+    visibility = ["//visibility:public"],
+)
+
+cc_binary(
+    name = "test_app",
+    srcs = ["main.cpp"],
+    deps = [":dynamic_event_system_lib"],
+)

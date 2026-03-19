@@ -21,8 +21,8 @@ target_include_directories(DynEventSysLib
 target_compile_features(DynEventSysLib PUBLIC cxx_std_17)
 
 # Example executable
-add_executable(DynamicEventSystem main.cpp)
-target_link_libraries(DynamicEventSystem PRIVATE DynEventSysLib)
+add_executable(test_app main.cpp)
+target_link_libraries(test_app PRIVATE DynEventSysLib)
 
 if(BUILD_TESTS)
     add_subdirectory(tests)

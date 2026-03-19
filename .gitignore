@@ -8,3 +8,7 @@ cmake-build-*/
 site/
 pycache/
 *.pyc
+bazel-*
+bazel-bin
+bazel-out 
+bazel-testlogs

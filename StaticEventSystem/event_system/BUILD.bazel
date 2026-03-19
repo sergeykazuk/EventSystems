@@ -1,0 +1,19 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "static_event_system",
+    srcs = glob([
+        "src/**/*.cpp",
+        "generated/src/**/*.cpp",
+    ]),
+    hdrs = glob([
+        "include/**/*.hpp",
+        "generated/include/**/*.hpp",
+    ]),
+    includes = [
+        "include",
+        "generated/include",
+    ],
+    copts = ["-std=c++17"],
+    visibility = ["//visibility:public"],
+)

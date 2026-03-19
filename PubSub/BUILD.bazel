@@ -1,0 +1,17 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+cc_library(
+    name = "pubsub_lib",
+    srcs = glob(["src/*.cpp"]),
+    hdrs = glob(["include/*.hpp"]),
+    includes = ["include"],
+    copts = ["-std=c++17"],
+    visibility = ["//visibility:public"],
+)
+
+cc_binary(
+    name = "test_app",
+    srcs = ["main.cpp"],
+    data = glob(["Data/**"]),
+    deps = [":pubsub_lib"],
+)

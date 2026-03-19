@@ -1,0 +1,13 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_binary(
+    name = "test_app",
+    srcs = glob([
+        "src/**/*.cpp",
+        "include/**/*.hpp",
+    ]),
+    includes = ["include"],
+    copts = ["-std=c++17"],
+    deps = ["//StaticEventSystem/event_system:static_event_system"],
+    visibility = ["//visibility:public"],
+)

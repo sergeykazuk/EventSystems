@@ -19,8 +19,8 @@ target_include_directories(PubSub
 )
 
 # Example executable
-add_executable(PubSubExample main.cpp)
-target_link_libraries(PubSubExample PRIVATE PubSub)
+add_executable(test_app main.cpp)
+target_link_libraries(test_app PRIVATE PubSub)
 
 # Copy the entire Data directory into the build tree so the
 # example executable can find the .txt files next to the binary.

@@ -5,6 +5,7 @@ theme:
     scheme: slate
 nav:
   - Home: index.md
+  - Bazel Build Guide: Bazel.md
   - PubSub: PubSub.md
   - Dynamic Event System: DynamicES.md
   - Static Event System: StaticES.md
