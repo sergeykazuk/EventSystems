@@ -12,6 +12,7 @@
 #include <iostream>
 #include <mutex>
 #include <condition_variable>
+#include <atomic>
 
 namespace {
     constexpr std::chrono::seconds READ_PERIOD{2};
