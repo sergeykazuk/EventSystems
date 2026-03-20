@@ -1,5 +1,5 @@
 #include "app/App.hpp"
-#include "system/EventSystem.hpp"
+#include "core/EventSystem.hpp"
 #include "system/EventSenders.hpp"
 #include "types/Timestamp.hpp"
 #include <csignal>

@@ -19,7 +19,9 @@
 \#include "core/EventTypeEnum.hpp"
 \#include <type_traits>
 #for $payload_type in $payload_types
+#if $payload_type != 'size_t'
 \#include "types/${payload_type}.hpp"
+#end if
 #end for
 
 namespace $namespace_name {

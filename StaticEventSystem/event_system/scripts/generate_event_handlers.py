@@ -95,6 +95,7 @@ def main() -> int:
             "events_payload_map": events_payload_map,
             "payload_types": sorted(payload_types),
             "payload_decls": payload_decls,
+            "uses_size_t": False,
         }
 
         try:

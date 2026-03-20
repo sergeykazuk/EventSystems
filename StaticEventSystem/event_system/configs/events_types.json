@@ -52,8 +52,14 @@
                 "second": "Uint8",
                 "format": "TimeFormat"
             }
-        }
+        },
 
+        "TimedData": {
+            "type": "struct",
+            "values": {
+                "triggers_count": "size_t"
+            }
+        }
     },
 
     "events": {
@@ -61,7 +67,8 @@
         "EventSystemShutdown": "",
         "Timestamp": "Timestamp",
         "SumOfTwoInts": "ResultOfSum16",
-        "TestSuccessful": "BoolFlags"
+        "TestSuccessful": "BoolFlags",
+        "TimedEvent1": "TimedData",
+        "TimedEvent2": "TimedData"
     }
-
 }

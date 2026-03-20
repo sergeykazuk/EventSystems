@@ -1,5 +1,5 @@
 #include "system/EventSystemHelpers.hpp"
-#include "system/EventSystem.hpp"
+#include "core/EventSystem.hpp"
 
 namespace event_system {
 

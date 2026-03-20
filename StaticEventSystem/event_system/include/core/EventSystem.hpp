@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <functional>
+#include <chrono>
 #include "core/SystemTypes.hpp"
 #include "core/EventSystemOperationResult.hpp"
 
@@ -13,6 +14,8 @@ public:
     static EventSystem& getInstance();
 
     void sendEvent(const EventTypeEnum, BytePtr_t&&);
+    void sendTimedEvent(const EventTypeEnum, std::chrono::milliseconds);
+    void stopTimedEvent(const EventTypeEnum);
 
     [[nodiscard]] EventSystemOperationResult registerEventHandler(const EventHandlerId, IEventHandler* const);
 

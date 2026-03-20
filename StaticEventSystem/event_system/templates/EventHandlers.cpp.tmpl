@@ -21,7 +21,9 @@
 
 \#include "handlers/I${handler_name}.hpp"
 #for $payload_type in $payload_types
+#if $payload_type != 'size_t'
 \#include "types/${payload_type}.hpp"
+#end if
 #end for
 \#include "core/EventHandlerId.hpp"
 

@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+include(CTest)
+
 # PubSub Library
 add_library(PubSub STATIC
     src/Publisher.cpp
@@ -26,3 +28,7 @@ target_link_libraries(test_app PRIVATE PubSub)
 # example executable can find the .txt files next to the binary.
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Data
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()

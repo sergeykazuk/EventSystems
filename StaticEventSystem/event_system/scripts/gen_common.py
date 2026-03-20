@@ -106,6 +106,8 @@ def render_type_header(
             resolved = resolve_type(field_type, base_aliases)
             if resolved == "std::string":
                 includes.add("#include <string>")
+            elif resolved == "size_t":
+                includes.add("#include <cstddef>")
             elif resolved in user_defined_types and resolved != type_name:
                 includes.add(f'#include "types/{resolved}.hpp"')
         body = [

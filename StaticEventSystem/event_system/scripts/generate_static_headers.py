@@ -45,6 +45,36 @@ def render_cheetah_template(template_path: Path, context: dict[str, Any]) -> str
         raise SystemExit(3)
 
 
+def is_timed_event_name(event_name: str) -> bool:
+    return event_name.startswith("TimedEvent")
+
+
+def build_payload_decls(
+    payload_types: list[str],
+    types_section: dict[str, Any],
+    base_aliases: dict[str, str],
+) -> tuple[list[dict[str, str]], bool]:
+    payload_decls: list[dict[str, str]] = []
+    uses_size_t = False
+
+    for payload_type in payload_types:
+        payload_cfg = types_section.get(payload_type, {})
+        payload_kind = payload_cfg.get("type", "struct")
+
+        payload_decl: dict[str, str] = {
+            "name": payload_type,
+            "kind": payload_kind,
+        }
+
+        if payload_kind == "enum":
+            base_type_name = payload_cfg.get("base_type", "int")
+            payload_decl["base_type"] = base_aliases.get(base_type_name, base_type_name)
+
+        payload_decls.append(payload_decl)
+
+    return payload_decls, uses_size_t
+
+
 def main() -> int:
     args = parse_args()
     root = args.root.resolve()
@@ -87,6 +117,11 @@ def main() -> int:
     base_aliases = types_section.get("base_datatypes", {})
     user_defined_types = {name for name in types_section.keys() if name != "base_datatypes"}
     events_map = events_types.get("events", {})
+    timed_events = {
+        event_name
+        for event_name in events_map.keys()
+        if is_timed_event_name(event_name)
+    }
 
     for type_name, type_def in types_section.items():
         if type_name == "base_datatypes":
@@ -99,8 +134,17 @@ def main() -> int:
     payload_types = {payload for payload in events_map.values() if payload}
 
     excluded_sender_events = {"EventSystemReady", "EventSystemShutdown"}
+    excluded_sender_events.update(timed_events)
+
+    sender_events_map = {
+        event_name: payload_type
+        for event_name, payload_type in events_map.items()
+        if event_name not in excluded_sender_events
+    }
+
+    sender_payload_types = {payload for payload in sender_events_map.values() if payload}
     payload_to_events: dict[str, list[str]] = defaultdict(list)
-    for event_name, payload_type in events_map.items():
+    for event_name, payload_type in sender_events_map.items():
         if event_name in excluded_sender_events or not payload_type:
             continue
         payload_to_events[payload_type].append(event_name)
@@ -126,36 +170,40 @@ def main() -> int:
         )
         return 4
 
-    payload_decls: list[dict[str, str]] = []
-    for payload_type in sorted(payload_types):
-        payload_cfg = types_section.get(payload_type, {})
-        payload_kind = payload_cfg.get("type", "struct")
+    sender_payload_decls, sender_uses_size_t = build_payload_decls(
+        sorted(sender_payload_types),
+        types_section,
+        base_aliases,
+    )
+    all_payload_decls, all_uses_size_t = build_payload_decls(
+        sorted(payload_types),
+        types_section,
+        base_aliases,
+    )
 
-        payload_decl: dict[str, str] = {
-            "name": payload_type,
-            "kind": payload_kind,
-        }
-
-        if payload_kind == "enum":
-            base_type_name = payload_cfg.get("base_type", "int")
-            payload_decl["base_type"] = base_aliases.get(base_type_name, base_type_name)
-
-        payload_decls.append(payload_decl)
+    sender_context = {
+        "namespace_name": namespace,
+        "events_map": sender_events_map,
+        "payload_types": sorted(sender_payload_types),
+        "payload_decls": sender_payload_decls,
+        "uses_size_t": sender_uses_size_t,
+    }
 
     helper_context = {
         "namespace_name": namespace,
         "events_map": events_map,
         "payload_types": sorted(payload_types),
-        "payload_decls": payload_decls,
+        "payload_decls": all_payload_decls,
+        "uses_size_t": all_uses_size_t,
     }
 
     write(
         out_include / "system" / "EventSenders.hpp",
-        render_cheetah_template(senders_template_path, helper_context),
+        render_cheetah_template(senders_template_path, sender_context),
     )
     write(
         out_source / "system" / "EventSenders.cpp",
-        render_cheetah_template(senders_cpp_template_path, helper_context),
+        render_cheetah_template(senders_cpp_template_path, sender_context),
     )
     write(
         out_include / "core" / "EventPayloadHelpers.hpp",

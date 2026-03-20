@@ -15,6 +15,7 @@
 #set $events_payload_map = $getVar('events_payload_map', {})
 #set $payload_types = $getVar('payload_types', [])
 #set $payload_decls = $getVar('payload_decls', [])
+#set $uses_size_t = $getVar('uses_size_t', False)
 
 /* 
    This code is generated, don't change it!
@@ -24,13 +25,16 @@
 \#pragma once
 \#include "core/IEventHandler.hpp"
 \#include "core/EventTypeEnum.hpp"
+#if $uses_size_t
+\#include <cstddef>
+#end if
 
 namespace $namespace_name {
 
 #for $payload_decl in $payload_decls
 #if $payload_decl.get('kind') == 'enum'
 enum class $payload_decl.get('name') : $payload_decl.get('base_type', 'int');
-#else
+#elif $payload_decl.get('kind') == 'struct'
 struct $payload_decl.get('name');
 #end if
 #end for

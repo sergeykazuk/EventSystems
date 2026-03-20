@@ -1,9 +1,12 @@
-#include "system/EventSystem.hpp"
+#include "core/EventSystem.hpp"
 #include "core/EventQueue.hpp"
 #include "core/EventDispatcher.hpp"
 #include "core/EventHandlersMapBuilder.hpp"
 #include "core/EventQueueId.hpp"
 #include "core/RegistrationTracker.hpp"
+#include "core/EventSystemTimer.hpp"
+#include "core/EventPayloadEraser.hpp"
+#include "types/TimedData.hpp"
 #include <atomic>
 #include <iostream>
 
@@ -22,6 +25,9 @@ namespace event_system
         ClassData()
             : m_dispatcher(buildEventHandlersMap(EventQueueId::eDefault))
             , m_queue(m_dispatcher)
+            , m_timer([this](std::vector<EventTypeEnum> t) {
+                onTimerTimeout(std::move(t));
+            })
         {
         }
 
@@ -33,18 +39,24 @@ namespace event_system
             unregisterEventHandler(const EventHandlerId);
         bool getLastEventData(const EventTypeEnum,
             const std::function<void(const BytePtr_t&)>& visitor) const;
+        void sendTimedEvent(const EventTypeEnum, std::chrono::milliseconds);
+        void stopTimedEvent(const EventTypeEnum);
 
     private:
         void start();
+        void onTimerTimeout(std::vector<EventTypeEnum>);
 
         EventDispatcher m_dispatcher;
         EventQueue m_queue;
+        EventSystemTimer m_timer;
         RegistrationTracker m_registrationTracker{};
         std::atomic<State> m_state{State::eWaitingForHandlers};
     };
 
     void EventSystem::ClassData::start()
     {
+        m_timer.init();
+
         auto expectedState{State::eWaitingForHandlers};
         if (m_state.compare_exchange_strong(expectedState, State::eRunning))
         {
@@ -63,11 +75,35 @@ namespace event_system
         // Shutdown discards queued events to avoid dispatching while handlers
         // may already be in destruction/unregistration paths.
         m_queue.stop();
+        m_timer.shutdown();
     }
 
     void EventSystem::ClassData::sendEvent(const EventTypeEnum eventId, BytePtr_t&& data)
     {
         m_queue.addEvent(eventId, std::move(data));
+    }
+
+    void EventSystem::ClassData::sendTimedEvent(const EventTypeEnum event
+        , std::chrono::milliseconds timeout)
+    {
+        if (m_state.load(std::memory_order_relaxed) != State::eRunning)
+        {
+            std::cout << "Cannot start timed event while EventSystem is not running\n";
+            return;
+        }
+
+        m_timer.startTimer(event, timeout);
+    }
+
+    void EventSystem::ClassData::stopTimedEvent(const EventTypeEnum event)
+    {
+        if (m_state.load(std::memory_order_relaxed) != State::eRunning)
+        {
+            std::cout << "Cannot stop timed event while EventSystem is not running\n";
+            return;
+        }
+
+        m_timer.stopTimer(event);
     }
 
     EventSystemOperationResult EventSystem::ClassData::registerEventHandler(const EventHandlerId handlerId
@@ -129,6 +165,17 @@ namespace event_system
         return m_queue.getLastEventData(eventId, visitor);
     }
 
+    void EventSystem::ClassData::onTimerTimeout(std::vector<EventTypeEnum> vec)
+    {
+        for (const auto event : vec)
+        {
+            // at the moment send always as 1, since there is no support for
+            // repetitive timed events
+            sendEvent(event, erasePayload(TimedData{1}));
+        }
+    }
+
+
     EventSystem::EventSystem()
         : m_pimpl(std::make_unique<ClassData>())
     {}
@@ -169,6 +216,17 @@ namespace event_system
         const std::function<void(const BytePtr_t&)>& visitor) const
     {
         return m_pimpl->getLastEventData(eventId, visitor);
+    }
+
+    void EventSystem::sendTimedEvent(const EventTypeEnum event
+        , std::chrono::milliseconds timeout)
+    {
+        m_pimpl->sendTimedEvent(event, timeout);
+    }
+
+    void EventSystem::stopTimedEvent(const EventTypeEnum event)
+    {
+        m_pimpl->stopTimedEvent(event);
     }
 
 }

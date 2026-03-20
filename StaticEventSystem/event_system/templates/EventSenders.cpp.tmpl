@@ -17,35 +17,14 @@
 
 
 \#include "system/EventSenders.hpp"
-\#include "system/EventSystem.hpp"
+\#include "core/EventSystem.hpp"
+\#include "core/EventPayloadEraser.hpp"
 \#include "core/EventTypeEnum.hpp"
 #for $payload_type in $payload_types
+#if $payload_type != 'size_t'
 \#include "types/${payload_type}.hpp"
+#end if
 #end for
-\#include <new>
-\#include <cstring>
-\#include <type_traits>
-
-namespace {
-
-template <typename T>
-$namespace_name::BytePtr_t erasePayload(T&& eventPayload)
-{
-    using EventPayloadT = std::decay_t<T>;
-
-    auto erased = std::make_unique<std::byte[]>(sizeof(EventPayloadT));
-
-    if constexpr (std::is_trivially_copyable_v<EventPayloadT>)
-    {
-        std::memcpy(erased.get(), &eventPayload, sizeof(EventPayloadT));
-        return erased;
-    }
-
-    new (erased.get()) EventPayloadT(std::forward<T>(eventPayload));
-    return erased;
-}
-
-}
 
 namespace $namespace_name {
 
@@ -69,5 +48,16 @@ void sendEvent${event_name}()
 #end if
 #end if
 #end for
+
+void sendTimedEvent(EventTypeEnum event, std::chrono::milliseconds timeout)
+{
+    EventSystem::getInstance().sendTimedEvent(event, timeout);
+}
+
+void stopTimedEvent(EventTypeEnum event)
+{
+    EventSystem::getInstance().stopTimedEvent(event);
+}
+
 
 }
