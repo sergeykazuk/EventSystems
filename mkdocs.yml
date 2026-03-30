@@ -13,3 +13,4 @@ nav:
     - Static Queue Stop Policy: adr/0001-static-event-queue-stop-policy.md
     - Last Event Data Visitor Access: adr/0002-last-event-data-visitor-access.md
     - Static Timer Single-Shot Policy: adr/0003-timer-single-shot-policy.md
+    - Last event data array storage: adr/0004-flat-array-last-event-data.md

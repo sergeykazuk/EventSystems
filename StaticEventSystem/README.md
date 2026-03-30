@@ -150,7 +150,18 @@ cmake --build build
 ./build/app/test_app
 ```
 
-Stop with `Ctrl+C`.
+Stop with `Ctrl+C` or 'Esc' Key.
+
+## Building and Running Tests
+
+To enable and build tests for StaticEventSystem, configure CMake with the following flag:
+
+```
+cmake -DBUILD_TESTING=ON ...
+```
+
+This will generate and build all test targets defined in the project. You can then run the tests using `ctest` or by executing the test binaries directly from the build directory.
+
 
 ## Memory Leak Checking (macOS)
 

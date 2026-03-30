@@ -6,8 +6,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-include(CTest)
-
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 set(STATIC_EVENT_SYSTEM_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
@@ -53,5 +51,6 @@ target_include_directories(static_event_system
 )
 
 if(BUILD_TESTING)
+    message("Building test targets")
     add_subdirectory(tests)
 endif()
