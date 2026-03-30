@@ -152,6 +152,26 @@ cmake --build build
 
 Stop with `Ctrl+C`.
 
+## Memory Leak Checking (macOS)
+
+To check for memory leaks using the built-in leaks tool on macOS, run:
+
+```
+leaks -atExit -- ./app/test_app
+```
+
+This will report any memory leaks detected after the application exits.
+
+## Memory Leak Checking (Linux)
+
+To check for memory leaks on Linux, use Valgrind:
+
+```
+valgrind --leak-check=full ./app/test_app
+```
+
+This will run your application and report any memory leaks detected after exit. Make sure Valgrind is installed (e.g., `sudo apt install valgrind`).
+
 ## Architecture
 
 ### Class Diagram

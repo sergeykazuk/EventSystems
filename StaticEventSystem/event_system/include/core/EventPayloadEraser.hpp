@@ -1,8 +1,8 @@
 #pragma once
 #include "core/SystemTypes.hpp"
+#include "core/EventPayloadHelpers.hpp"
 #include <cstring>
 #include <new>
-#include <type_traits>
 #include <utility>
 
 namespace event_system {
@@ -12,7 +12,13 @@ BytePtr_t erasePayload(T&& eventPayload)
 {
     using EventPayloadT = std::decay_t<T>;
 
-    auto erased = std::make_unique<std::byte[]>(sizeof(EventPayloadT));
+    auto deleter = [](std::byte* ptr) {
+        reinterpret_cast<EventPayloadT*>(ptr)->~EventPayloadT();
+        delete[] ptr;
+    };
+
+    std::unique_ptr<std::byte[], decltype(deleter)> 
+            erased{new std::byte[sizeof(EventPayloadT)], deleter};
 
     if constexpr (std::is_trivially_copyable_v<EventPayloadT>)
     {

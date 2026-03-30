@@ -2,13 +2,23 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "build-pubsub-example",
             "type": "shell",
             "command": "cmake --build PubSub/build",
             "args": ["--config", "Debug"],
             "group": { "kind": "build", "isDefault": true },
             "problemMatcher": ["$gcc"],
             "detail": "Compile PubSubExample using CMake"
+        },
+        {
+            "label": "build-static-event-system",
+            "type": "shell",
+            "command": "cmake --build StaticEventSystem/build",
+            "args": [],
+            "isBackground": false,
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "Compile StaticEventSystem (app/test_app) using CMake"
         }
     ]
 }

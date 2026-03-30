@@ -34,14 +34,14 @@ bool getLastEvent${event_name}(${payload_type}& outPayload)
 
     const bool hasValue = EventSystem::getInstance().getLastEventData(
         EventTypeEnum::e${event_name},
-        [&copied, &outPayload](const BytePtr_t& payload)
+        [&copied, &outPayload](const std::byte* payload)
         {
             if (payload == nullptr)
             {
                 return;
             }
 
-            outPayload = *reinterpret_cast<const ${payload_type}*>(payload.get());
+            outPayload = *reinterpret_cast<const ${payload_type}*>(payload);
             copied = true;
         });
 

@@ -15,9 +15,10 @@
 
 \#pragma once
 \#include "core/SystemTypes.hpp"
+\#include <utility>
 
 namespace $namespace_name {
 
-void destroyEventPayload(const EventTypeEnum eventType, BytePtr_t& storage);
+void destroyEventPayload(const EventTypeEnum eventType, std::byte* storage);
 
 }

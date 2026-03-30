@@ -38,7 +38,7 @@ namespace event_system
         EventSystemOperationResult 
             unregisterEventHandler(const EventHandlerId);
         bool getLastEventData(const EventTypeEnum,
-            const std::function<void(const BytePtr_t&)>& visitor) const;
+            const std::function<void(std::byte const * const)>& visitor) const;
         void sendTimedEvent(const EventTypeEnum, std::chrono::milliseconds);
         void stopTimedEvent(const EventTypeEnum);
 
@@ -160,7 +160,7 @@ namespace event_system
     }
 
     bool EventSystem::ClassData::getLastEventData(const EventTypeEnum eventId,
-        const std::function<void(const BytePtr_t&)>& visitor) const
+        const std::function<void(std::byte const * const)>& visitor) const
     {
         return m_queue.getLastEventData(eventId, visitor);
     }
@@ -213,7 +213,7 @@ namespace event_system
     }
 
     bool EventSystem::getLastEventData(const EventTypeEnum eventId,
-        const std::function<void(const BytePtr_t&)>& visitor) const
+        const std::function<void(std::byte const * const)>& visitor) const
     {
         return m_pimpl->getLastEventData(eventId, visitor);
     }

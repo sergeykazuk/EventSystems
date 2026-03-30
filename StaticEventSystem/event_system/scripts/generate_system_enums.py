@@ -23,11 +23,14 @@ def generate(root: Path, events_enum_path: Path, handlers_path: Path, out_includ
     namespace = "event_system"
 
     event_ids = events_enum.get("event_ids", {})
+    timed_event_ids = events_enum.get("")
     handler_names = handlers.get("handlers", {}).keys()
     queue_names = handlers.get("EventQueues", [])
 
     event_enum_members = {"eUnknown": "0"}
     event_enum_members.update({f"e{name}": value for name, value in event_ids.items()})
+    event_enum_members.update({f"eCount": ""})
+
 
     handler_members = {}
     for idx, name in enumerate(handler_names, start=0):

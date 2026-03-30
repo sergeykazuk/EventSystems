@@ -17,7 +17,7 @@ public:
 
     void addEvent(const EventTypeEnum, BytePtr_t&& data);
     bool getLastEventData(const EventTypeEnum,
-        const std::function<void(const BytePtr_t&)>& visitor) const;
+        const std::function<void(std::byte const * const)>& visitor) const;
     void start();
     void stop();
 

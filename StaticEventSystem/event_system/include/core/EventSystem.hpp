@@ -22,7 +22,7 @@ public:
     [[nodiscard]] EventSystemOperationResult unregisterEventHandler(const EventHandlerId);
 
     bool getLastEventData(const EventTypeEnum,
-        const std::function<void(const BytePtr_t&)>& visitor) const;
+        const std::function<void(std::byte const * const)>& visitor) const;
 
     void init();
     void shutdown();

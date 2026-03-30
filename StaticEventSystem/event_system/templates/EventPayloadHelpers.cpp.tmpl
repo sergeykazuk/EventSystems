@@ -26,7 +26,7 @@
 
 namespace $namespace_name {
 
-void destroyEventPayload(const EventTypeEnum eventType, BytePtr_t& storage)
+void destroyEventPayload(const EventTypeEnum eventType, std::byte* storage)
 {
     if (storage == nullptr)
     {
@@ -41,21 +41,16 @@ void destroyEventPayload(const EventTypeEnum eventType, BytePtr_t& storage)
     {
         if constexpr (!std::is_trivially_copyable_v<${payload_type}>)
         {
-            auto* object = reinterpret_cast<${payload_type}*>(storage.get());
+            auto* object = reinterpret_cast<${payload_type}*>(storage);
             object->~${payload_type}();
         }
-
-        storage.reset();
         break;
     }
 #end if
 #end for
     default:
-    {
-        storage.reset();
         break;
-    }
     }
 }
 
-}
+} // namespace $namespace_name

@@ -1,0 +1,79 @@
+## -----------------------------------------------------------------------------
+## Cheetah template: LastEventHelpers.ipp
+## Expected template context:
+## - namespace_name: string (default: "event_system")
+## - events_map: dict[str, str] mapping event name to payload type or ""
+## - payload_types: list[str] payload type names
+## -----------------------------------------------------------------------------
+
+#set $namespace_name = $getVar('namespace_name', 'event_system')
+#set $events_map = $getVar('events_map', {})
+#set $payload_types = $getVar('payload_types', [])
+
+/* 
+   This code is generated, don't change it!
+   All the changes here will be dropped during the build!
+*/
+
+\#include "core/EventTypeEnum.hpp"
+#for $payload_type in $payload_types
+#if $payload_type != 'size_t'
+\#include "types/${payload_type}.hpp"
+#end if
+#end for
+\#include <array>
+
+namespace {
+
+#set counter = 0
+#for $event_name, $payload_type in $events_map.items()
+#set counter = $counter + 1
+#end for
+
+// Array of event payload sizes
+constexpr std::array<size_t, ${counter}> eventSizes = {
+#for $event_name, $payload_type in $events_map.items()
+#if $payload_type
+    sizeof(event_system::${payload_type}),
+#else
+    0,
+#end if
+#end for
+};
+
+struct LastEventPositionData
+{
+   size_t lastEventOffset{};
+   size_t eventSize{};
+};
+
+}
+
+namespace $namespace_name {
+
+constexpr size_t calculateLastEventPayloadsSize()
+{
+    size_t allEventsSize{};
+    allEventsSize = allEventsSize
+#for $event_name, $payload_type in $events_map.items()
+#if $payload_type
+        + sizeof(event_system::${payload_type})
+#end if
+#end for
+    ;
+
+    return allEventsSize;
+}
+
+// Returns {offset, size} for the given event
+constexpr LastEventPositionData getLastEventOffset(const EventTypeEnum ev)
+{
+    size_t offset = 0;
+    size_t idx = static_cast<size_t>(ev);
+    for (size_t i = 0; i < idx; ++i) {
+        offset += eventSizes[i];
+    }
+    return {offset, eventSizes[idx]};
+}
+
+} // namespace $namespace_name

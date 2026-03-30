@@ -4,6 +4,8 @@
 #include <memory>
 #include <unordered_map>
 #include <vector>
+#include <functional>
+
 
 namespace event_system {
 
@@ -16,7 +18,7 @@ class EventDispatcher;
 class EventQueue;
 class EventSystem;
 
-using BytePtr_t = std::unique_ptr<std::byte[]>;
+using BytePtr_t = std::unique_ptr<std::byte[], std::function<void(std::byte*)> >;
 using HandlerIds_t = std::vector<EventHandlerId>;
 using EventHandlersMap_t = std::unordered_map<EventTypeEnum, HandlerIds_t>;
 
