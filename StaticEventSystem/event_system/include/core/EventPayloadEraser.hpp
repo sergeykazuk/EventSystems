@@ -1,6 +1,5 @@
 #pragma once
 #include "core/SystemTypes.hpp"
-#include "core/EventPayloadHelpers.hpp"
 #include <cstring>
 #include <new>
 #include <utility>
@@ -12,7 +11,7 @@ BytePtr_t erasePayload(T&& eventPayload)
 {
     using EventPayloadT = std::decay_t<T>;
 
-    auto deleter = [](std::byte* ptr) {
+    static auto deleter = [](std::byte* ptr) {
         reinterpret_cast<EventPayloadT*>(ptr)->~EventPayloadT();
         delete[] ptr;
     };

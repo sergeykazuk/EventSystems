@@ -1,6 +1,6 @@
 #include "core/LastEventDataHandler.hpp"
-#include "core/LastEventHelpers.ipp"
 #include "core/EventPayloadHelpers.hpp"
+#include "core/LastEventHelpers.ipp"
 #include <bitset>
 #include <array>
 #include <mutex>

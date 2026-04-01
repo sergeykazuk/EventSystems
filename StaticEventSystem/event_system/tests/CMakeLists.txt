@@ -1,3 +1,6 @@
+cmake_minimum_required(VERSION 3.14)
+project(EventSystemTests)
+
 include(FetchContent)
 
 FetchContent_Declare(
@@ -12,22 +15,5 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(googletest)
 
-add_executable(event_system_timer_tests
-    EventSystemTimerTests.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src/core/EventSystemTimer.cpp
-)
-
-target_include_directories(event_system_timer_tests
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/../include
-)
-
-target_link_libraries(event_system_timer_tests
-    PRIVATE
-        gtest_main
-)
-
-target_compile_features(event_system_timer_tests PRIVATE cxx_std_17)
-
-include(GoogleTest)
-gtest_discover_tests(event_system_timer_tests)
+add_subdirectory(EventSystemTimer)
+add_subdirectory(LastEventDataHandler)
