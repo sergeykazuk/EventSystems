@@ -17,3 +17,4 @@ FetchContent_MakeAvailable(googletest)
 
 add_subdirectory(EventSystemTimer)
 add_subdirectory(LastEventDataHandler)
+add_subdirectory(EventPayloadEraser)
