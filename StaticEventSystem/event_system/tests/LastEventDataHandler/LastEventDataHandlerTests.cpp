@@ -1,36 +1,13 @@
 #include "gtest/gtest.h"
-#include "../../include/core/LastEventDataHandler.hpp"
-#include "../../include/core/SystemTypes.hpp"
+#include "core/LastEventDataHandler.hpp"
+#include "core/SystemTypes.hpp"
+#include "core/EventPayloadEraser.hpp"
 #include "TestPayloads.hpp"
 #include "TestEventTypeEnum.hpp"
-#include <cstring>
-#include <type_traits>
-
-using namespace event_system;
 
 namespace {
-template<typename T>
-BytePtr_t erasePayload(T&& eventPayload)
-{
-    using EventPayloadT = std::decay_t<T>;
 
-    auto deleter = [](std::byte* ptr) {
-        reinterpret_cast<EventPayloadT*>(ptr)->~EventPayloadT();
-        delete[] ptr;
-    };
-
-    std::unique_ptr<std::byte[], decltype(deleter)> 
-            erased{new std::byte[sizeof(EventPayloadT)], deleter};
-
-    if constexpr (std::is_trivially_copyable_v<EventPayloadT>)
-    {
-        std::memcpy(erased.get(), &eventPayload, sizeof(EventPayloadT));
-        return erased;
-    }
-
-    new (erased.get()) EventPayloadT(std::forward<T>(eventPayload));
-    return erased;
-}
+using namespace event_system;
 
 TEST(LastEventDataHandlerTest, StoreAndRetrieve_U8)
 {
