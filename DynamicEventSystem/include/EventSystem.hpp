@@ -2,6 +2,8 @@
 #include "HandlersManager.hpp"
 #include "EventQueue.hpp"
 #include "TypeEraser.hpp"
+#include <type_traits>
+#include <utility>
 
 namespace event_system {
 namespace dynamic {
@@ -16,10 +18,24 @@ public:
     void sendEvent(T&& ev)
     {
         using StoredT = std::decay_t<T>;
+        static_assert(isRegisteredPayloadType<StoredT>(),
+            "DynamicEventSystem payloads must be trivially copyable");
+
         auto id = TypeID::value<StoredT>();
 
-        auto bytePtr = createEvent(std::forward<T>(ev));
-        m_eventQueue.addEvent(id, std::move(bytePtr));
+        // `stored` is copied into the task's own closure storage here, so its
+        // lifetime is tied to the queued task, not to the caller's argument.
+        // `&m_handlersManager` is captured by reference: it's a member of this
+        // singleton, which outlives every task ever queued (tasks are drained
+        // in EventQueue::stop()/dtor before the singleton itself is torn down).
+        m_eventQueue.addTask([&handlers = m_handlersManager, id, stored = StoredT(std::forward<T>(ev))]()
+        {
+            const EventBufferView view{
+                reinterpret_cast<const std::byte*>(&stored),
+                sizeof(StoredT)
+            };
+            handlers.dispatchEvent(id, view);
+        });
     }
 
     template <typename T>
@@ -45,8 +61,7 @@ public:
 private:
     EventSystem()
         : m_handlersManager()
-        , m_eventQueue([this](TypeID_t id, const BytePtr& data)
-            { m_handlersManager.dispatchEvent(id, data); })
+        , m_eventQueue()
     {
     }
 

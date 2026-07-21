@@ -1,6 +1,5 @@
 #pragma once
 #include <atomic>
-#include <new>
 #include <type_traits>
 #include "typedefs.hpp"
 
@@ -22,27 +21,10 @@ private:
 };
 
 template<typename T>
-BytePtr createEvent(T&& ev)
+constexpr bool isRegisteredPayloadType() noexcept
 {
     using StoredT = std::decay_t<T>;
-    static_assert(std::is_constructible_v<StoredT, T&&>, "Stored type must be constructible from the provided argument");
-
-    auto deleter = [](std::byte* p){
-        if (p == nullptr)
-        {
-            return;
-        }
-
-        StoredT* casted = reinterpret_cast<StoredT*>(p);
-        delete casted;
-    };
-
-    StoredT* raw = new (std::nothrow) StoredT(std::forward<T>(ev));
-    if (raw == nullptr)
-    {
-        return BytePtr(nullptr, deleter);
-    }
-    return BytePtr(reinterpret_cast<std::byte*>(raw), deleter);
+    return std::is_trivially_copyable_v<StoredT>;
 }
 
 }
